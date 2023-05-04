@@ -22,7 +22,6 @@ module.exports = buildSchema(`
 
 
 
-
     input UserInputData{
         email:String!
         name:String!
@@ -41,6 +40,7 @@ module.exports = buildSchema(`
 
     type RootQuery{
         getUser(userId:getUserId):User!
+        getAllUsers:[User!]!
     }
 
     type RootMutation {

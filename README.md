@@ -30,8 +30,8 @@ type npm start
 
 
 ## Project Status
--deplayed @   https://mcdonaldphone-book.onrender.com  
--api documentation  @ https://mcdonaldphone-book.onrender.com/api-docs
+-deployed @   https://social-events.onrender.com
+-api documentation and testing  @ https://social-events.onrender.com/graphql
 ### Project is: In development
 
 

@@ -1,4 +1,4 @@
-const bcryptjs = require('bcryptjs');
+const bcryptjs = require("bcryptjs");
 const User = require("../models/user");
 
 module.exports = {
@@ -19,9 +19,19 @@ module.exports = {
     return { ...createdUser._doc, _id: createdUser.toString() };
   },
 
-  getUser:async function ({userId},req){
-    const user = await User.findOne({ _id:userId.id });
-    return user
-  }
-};
+  getAllUsers: async function() {
+    try {
+      const users = await User.find();
+      return users.map((user) => {
+        return { ...user._doc, _id: user._doc._id.toString() };
+      });
+    } catch (error) {
+      throw error;
+    }
+  },
 
+  getUser: async function ({ userId }, req) {
+    const user = await User.findOne({ _id: userId.id });
+    return user;
+  },
+};
