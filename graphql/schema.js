@@ -28,6 +28,10 @@ module.exports = buildSchema(`
         password:String!
     }
 
+    input UserId {
+        id:ID
+    }
+
     input UserInputPost{
         content:String!
         date:String!
@@ -45,6 +49,8 @@ module.exports = buildSchema(`
 
     type RootMutation {
         createUser(userInput:UserInputData):User!
+        updateUser(userId:UserId!,userInput: UserInputData!):User!
+        deleteUser(userId:getUserId!):String!
         createPost(userPost:UserInputPost):Posts!
     }
 

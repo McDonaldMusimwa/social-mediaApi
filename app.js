@@ -17,7 +17,16 @@ app.use(
   graphqlHTTP({
     schema: graphqlSchema,
     rootValue: graphqlResolver,
-    graphiql: true // Enable GraphiQL UI
+    graphiql: true, // Enable GraphiQL UI
+    customFormatErrorFn(err){
+      if(!err.originalError){
+        return err
+      }
+      const data = err.originalError.data;
+      const message = err.message || "An error occured";
+      const code = err.originalError.cade || 500;
+      return{message:message,status:code,data:data}
+    }
   })
 );
 
