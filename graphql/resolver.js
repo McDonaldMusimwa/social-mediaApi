@@ -38,6 +38,7 @@ module.exports = {
 
   updateUser: async function ({ userId, userInput }, req) {
     //validate email
+    try{
     const errors = []
     if(!validator.isEmail(userInput.email)){
       errors.push({message:"Email is invalid"});
@@ -65,6 +66,9 @@ module.exports = {
     }
   
     return { ...user._doc, _id: user.id };
+  }catch(err){
+    throw err
+  }
   },
 
   getAllUsers: async function () {
