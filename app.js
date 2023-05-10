@@ -39,8 +39,9 @@ app.use(
 
 
 // initialize passport middleware
-app.use(passport.initialize());
+//app.use(passport.initialize());
 
+/*
 app.get(
   "/google/callback",
   passport.authenticate("google", {
@@ -53,6 +54,7 @@ app.get(
     res.redirect(redirectUrl);
   }
 );
+*/
 
 let database;
 mongoose

@@ -10,7 +10,8 @@ passport.use(
     callbackURL:'/auth/google/redirect',
     clientID: CLIENTID,
     clientSecret: CLIENTSECRET,
-  }),(accessToken, refreshToken, profile, done)=>{
+  },(accessToken, refreshToken, profile, done)=>{
     //passport call back function 
-  }
+    console.log(profile)
+  })
 );
