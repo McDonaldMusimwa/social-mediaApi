@@ -19,7 +19,12 @@ Social media API build with graphql,express,node Js and mongodb.The project allo
     "express-graphql": "^0.12.0"  
     "graphql": "^15.3.0"  
     "mongoose": "^7.1.0"  
-    "nodemon": "^2.0.22"   
+    "nodemon": "^2.0.22"  
+    "passport": "^0.6.0"  
+    "passport-google-oauth2": "^0.2.0"    
+    "express-session": "^1.17.3" 
+    "validator": "^13.9.0" 
+
     
 
 ## Setup

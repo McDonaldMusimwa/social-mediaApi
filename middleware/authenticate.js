@@ -1,13 +1,12 @@
-const passport = require("passport");
 
-const isAthenticated = (req, res, next) => {
-  passport.authenticate("jwt", { session: false }, (err, user, info) => {
-    if (err || !user) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-    req.user = user;
-    return next();
-  });
+
+const authCheck= (req,res,next)=>{
+  if (!req.user){
+      //if user is not logged in 
+      res.redirect('/auth/login');
+  }else{
+      next()
+  }
 };
 
-module.exports = isAthenticated;
+module.exports = authCheck;

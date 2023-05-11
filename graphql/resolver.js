@@ -2,7 +2,7 @@ const bcryptjs = require("bcryptjs");
 const UserModel = require("../models/user");
 const validator = require("validator");
 const passport = require("passport");
-const authenticate = require("../middleware/authenticate");
+const authCheck = require("../services/authCheck");
 
 module.exports = {
   createUser: async function ({ userInput }, req) {
@@ -27,7 +27,9 @@ module.exports = {
       //error.data=errors;
       throw error;
     }
-    const existingUser = await User.findOne({ email: userInput.email });
+    const existingUser = await UserModel.User.findOne({
+      email: userInput.email,
+    });
     if (existingUser) {
       const error = new Error("User already existing ");
       throw error;
@@ -44,9 +46,10 @@ module.exports = {
   },
 
   updateUser: async function ({ userId, userInput }, req) {
-    //auth
-    if (!req.isAuthenticated()) {
-      throw new Error("You must be authenticated to perform this action.");
+    // check if user is authenticated
+    const isAuthenticated = authCheck(req);
+    if (!isAuthenticated) {
+      throw new Error("User is not authenticated");
     }
 
     //validate email
@@ -94,7 +97,7 @@ module.exports = {
 
   getAllUsers: async function () {
     try {
-      const users = await User.find();
+      const users = await UserModel.User.find();
       return users.map((user) => {
         return { ...user._doc, _id: user._doc._id.toString() };
       });
@@ -104,20 +107,22 @@ module.exports = {
   },
 
   getUser: async function ({ userId }, req) {
-    const user = await User.findOne({ _id: userId.id });
+    const user = await UserModel.User.findOne({ _id: userId.id });
     return user;
   },
 
   deleteUser: async function ({ userId }, req) {
-    //auth
-    if (!req.isAuthenticated()) {
-      throw new Error("You must be authenticated to perform this action.");
-    }
-    try {
-      await User.deleteOne({ _id: userId.id });
-      return "user deleted";
-    } catch (error) {
-      throw error;
+    // check if user is authenticated
+    const isAuthenticated = authCheck(req);
+    if (!isAuthenticated) {
+      throw new Error("User is not authenticated");
+    } else {
+      try {
+        await UserModel.User.deleteOne({ _id: userId.id });
+        return "user deleted";
+      } catch (error) {
+        throw error;
+      }
     }
   },
 };

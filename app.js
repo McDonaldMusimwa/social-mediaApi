@@ -2,6 +2,16 @@ const express = require("express");
 const app = express();
 const PORT = 3000;
 
+//autho imports
+const authRoutes = require('./routes/auth');
+
+//session and cookie imports
+const session = require("express-session");
+const passport = require("passport");
+const cookieparser = require('cookie-parser');
+require("dotenv").config();
+const cookiesessionkey = process.env.SESSIONKEY;
+
 //Mongoose
 const mongoose = require("mongoose");
 require("dotenv").config();
@@ -13,11 +23,30 @@ const graphqlResolver = require("./graphql/resolver");
 //Oauth
 const passportSetUp = require("./services/passport");
 
-//save Oauth user
-//const User = require('./models/user');
-const authRoutes = require('./routes/auth')
 
+
+
+//session 
+
+//const profileRoutes = require('./routes/profile');
+//set up session cookies
+
+app.use(cookieparser())
+app.use(session({
+  secret: cookiesessionkey,
+  resave: false,
+  saveUninitialized: false,
+  name: "my-cookie-name",
+}));
+
+//initialize passport
+app.use(passport.initialize())
+app.use(passport.session())
+
+//Routes
+//app.use('/profile',profileRoutes)
 app.use('/auth',authRoutes)
+
 
 app.use(
   "/graphql",
