@@ -1,5 +1,5 @@
 const bcryptjs = require("bcryptjs");
-const User = require("../models/user");
+const UserModel = require("../models/user");
 const validator = require("validator");
 const passport = require("passport");
 const authenticate = require("../middleware/authenticate");
@@ -33,7 +33,7 @@ module.exports = {
       throw error;
     }
     const hashedPassword = await bcryptjs.hash(userInput.password, 12);
-    const user = new User({
+    const user = new UserModel.User({
       email: userInput.email,
       name: userInput.name,
       password: hashedPassword,
@@ -69,7 +69,7 @@ module.exports = {
 
       const hashedPassword = await bcryptjs.hash(userInput.password, 12);
 
-      const user = await User.findOneAndUpdate(
+      const user = await UserModel.User.findOneAndUpdate(
         { _id: userId.id },
         {
           $set: {
