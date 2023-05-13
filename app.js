@@ -3,12 +3,12 @@ const app = express();
 const PORT = 3000;
 
 //autho imports
-const authRoutes = require('./routes/auth');
+const authRoutes = require("./routes/auth");
 
 //session and cookie imports
 const session = require("express-session");
 const passport = require("passport");
-const cookieparser = require('cookie-parser');
+//const cookieparser = require('cookie-parser');
 require("dotenv").config();
 const cookiesessionkey = process.env.SESSIONKEY;
 
@@ -22,32 +22,44 @@ const graphqlSchema = require("./graphql/schema");
 const graphqlResolver = require("./graphql/resolver");
 //Oauth
 const passportSetUp = require("./services/passport");
+const authCheck = require("./services/authCheck");
 
-
-
-
-//session 
+//session
 
 //const profileRoutes = require('./routes/profile');
 //set up session cookies
 
-app.use(cookieparser())
-app.use(session({
-  secret: cookiesessionkey,
-  resave: false,
-  saveUninitialized: false,
-  name: "my-cookie-name",
-}));
+//app.use(cookieparser())
+app.use(
+  session({
+    secret: cookiesessionkey,
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false },
+  })
+);
 
 //initialize passport
-app.use(passport.initialize())
-app.use(passport.session())
+app.use(passport.initialize());
+app.use(passport.session());
 
 //Routes
 //app.use('/profile',profileRoutes)
-app.use('/auth',authRoutes)
+app.use("/auth", authRoutes);
 
-
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "OPTIONS,PUT,POST,GET,DELETE,PATCH"
+  );
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type,Authorization");
+  if (req.method === "OPTIONS") {
+    res.sendStatus(200);
+  }
+  next();
+});
+app.use(authCheck)
 app.use(
   "/graphql",
   graphqlHTTP({
@@ -65,7 +77,6 @@ app.use(
     },
   })
 );
-
 
 // initialize passport middleware
 //app.use(passport.initialize());

@@ -1,4 +1,5 @@
 const passport = require("passport");
+const jwt = require("jsonwebtoken");
 const GoogleStrategy = require("passport-google-oauth2").Strategy;
 require("dotenv").config();
 const CLIENTID = process.env.GOOGLE_CLIENT_ID;
@@ -29,6 +30,13 @@ passport.use(
           if (currentUser) {
             //already in database
             console.log("user is ", currentUser);
+            // generate a token and attach it to the user object
+            const token = jwt.sign(
+              { id: currentUser.id },
+              process.env.SESSIONKEY
+            );
+            currentUser.token = token;
+
             done(null, currentUser);
           } else {
             //if not create user
@@ -38,8 +46,14 @@ passport.use(
             })
               .save()
               .then((newUser) => {
-                console.log(`new user ${profile.displayName} is saved`);
+                //console.log(`new user ${profile.displayName} is saved`);
                 done(null, newUser);
+                // generate a token and attach it to the user object
+                const token = jwt.sign(
+                  { id: currentUser.id },
+                  process.env.SESSIONKEY
+                );
+                currentUser.token = token;
               });
           }
         }

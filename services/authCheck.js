@@ -1,11 +1,29 @@
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
+const TOKENSECRET = process.env.TOKENSECRET;
+
 const authCheck = (req, res, next) => {
-    console.log(req.user)
-  if (!req.user) {
-    // if user is not logged in
-    return false;
-  } else {
-    return true;
+  const authHeader = req.get("Authorization");
+
+  if (!authHeader) {
+    req.isAuth = false;
+    return next();
   }
+
+  const token = authHeader.split(" ")[1];
+  let decodedToken;
+  try {
+    decodedToken = jwt.verify(token, TOKENSECRET);
+  } catch (err) {
+    req, (isAuth = false);
+    return next();
+  }
+  if (!decodedToken) {
+    req, (isAuth = false);
+    return next();
+  }
+  req.userId = decodedToken.userId;
+  req.isAuth = true;
 };
 
 module.exports = authCheck;

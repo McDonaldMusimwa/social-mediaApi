@@ -20,7 +20,7 @@ router.get(
 //call back router for google to redirect
 //call back router for google to redirect
 router.get("/google/redirect", passport.authenticate("google"), (req, res) => {
-  res.send("you are authirised");
+  res.redirect("/graphql");
 });
 
 module.exports = router;
