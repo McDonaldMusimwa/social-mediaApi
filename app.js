@@ -2,6 +2,9 @@ const express = require("express");
 const app = express();
 const PORT = 3000;
 
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger-output.json');
+
 //autho imports
 const authRoutes = require("./routes/auth");
 
@@ -24,6 +27,9 @@ const graphqlResolver = require("./graphql/resolver");
 const passportSetUp = require("./services/passport");
 const authCheck = require("./services/authCheck");
 
+
+// Serve Swagger documentation
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 //session
 
 //const profileRoutes = require('./routes/profile');
