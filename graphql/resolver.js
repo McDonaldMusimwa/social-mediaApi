@@ -50,11 +50,7 @@ module.exports = {
   updateUser: async function ({ userId, userInput }, req) {
     // check if user is authenticated
 
-    if (!req.isAuth) {
-      const error = new Error("User is not authenticated");
-      error.code = 401;
-      throw error;
-    }
+    authCheck(req);
 
     //validate email
     try {
@@ -117,22 +113,17 @@ module.exports = {
 
   deleteUser: async function ({ userId }, req) {
     // check if user is authenticated
-    const isAuthenticated = authCheck(req);
-    if (!isAuthenticated) {
-      throw new Error("User is not authenticated");
-    } else {
-      try {
-        await UserModel.User.deleteOne({ _id: userId.id });
-        return "user deleted";
-      } catch (error) {
-        throw error;
-      }
+
+    authCheck(req);
+    try {
+      await UserModel.User.deleteOne({ _id: userId.id });
+      return "user deleted";
+    } catch (error) {
+      throw error;
     }
   },
 
   login: async function ({ email, password }) {
-    console.log(email);
-    console.log(password);
     try {
       const user = await UserModel.User.findOne({ email: email });
       if (!user) {
@@ -163,8 +154,9 @@ module.exports = {
     }
   },
   createPost: async function ({ userPost }, req) {
-    console.log(userPost);
+    authCheck(req);
     const errors = [];
+   
     if (
       validator.isEmpty(userPost.title) ||
       !validator.isLength(userPost.title, { min: 5 })
@@ -185,7 +177,7 @@ module.exports = {
     const fetcheduser = await UserModel.User.findById(req.userId);
     if (!user) {
       const error = new Error("Invalid input");
-     
+
       error.code = 422;
       throw error;
     }

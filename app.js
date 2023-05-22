@@ -59,7 +59,7 @@ app.use((req, res, next) => {
   }
   next();
 });
-app.use(authCheck)
+//app.use(authCheck)
 app.use(
   "/graphql",
   graphqlHTTP({
